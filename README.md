@@ -11,6 +11,11 @@ If you stuck with Kotlin-specific questions or anything related to this template
 - Template [issue tracker][issues]
 
 
+Regexp help:
+
+- [regexpr][regexr]
+- [rubular][rubular]
+
 [^aoc]:
     [Advent of Code][aoc] – an annual event in December since 2015.
     Every year since then, with the first day of December, a programming puzzles contest is published every day for twenty-four days.
@@ -23,3 +28,9 @@ If you stuck with Kotlin-specific questions or anything related to this template
 [kotlin]: https://kotlinlang.org
 [slack]: https://surveys.jetbrains.com/s3/kotlin-slack-sign-up
 [template]: https://github.com/kotlin-hands-on/advent-of-code-kotlin-template
+
+
+[regexr]: https://regexr.com/
+[rubular]: https://rubular.com/
+
+
