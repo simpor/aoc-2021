@@ -40,10 +40,10 @@ fun main() {
     val input = File("src", "Day01.txt").readText()
 
     part1(testInput) test Pair(7, "test 1 part 1 should be 0")
-    part1(input) test Pair(0, "part 1 should be 0")
+    part1(input) test Pair(1139, "part 1 should be 0")
 
-    part2(testInput) test Pair(0, "test 2 part 2 should be 0")
-    part2(input) test Pair(0, "part 2 should be 0")
+    part2(testInput) test Pair(5, "test 2 part 2 should be 0")
+    part2(input) test Pair(1103, "part 2 should be 0")
 
 
 }
