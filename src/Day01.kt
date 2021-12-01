@@ -1,8 +1,6 @@
 import AoCUtils.test
 import java.io.File
 
-//val input = AoCUtils.readText("")
-
 fun main() {
     fun part1(input: String): Int {
         val list = input.split("\n").map { s -> s.toInt() }
