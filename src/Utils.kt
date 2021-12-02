@@ -32,7 +32,6 @@ object AoCUtils {
 
     fun readLines(source: String): List<String> = readText(source).lines()
 
-
     infix fun <T> T.test(pair: Pair<T, String>) =
         if (this == pair.first)
             colored {
