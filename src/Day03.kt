@@ -5,69 +5,46 @@ fun main() {
     data class Order(val order: String, val x: Int)
 
     fun part1(input: String): Int {
-
-        var nums = input.lines().get(0).length
-
-        var a = "";
-        var b = "";
+        val nums = input.lines().get(0).length
+        var gamma = ""
+        var epsilon = ""
 
         for (i in 0 until nums) {
-            var count = 0
-            for (line in input.lines()) {
-                if (line[i] == '1') count++;
-            }
+            val count = input.lines().filter { line -> line[i] == '1' }.size
             val other = input.lines().size - count
             if (count > other) {
-                a += "1"
-                b += "0"
+                gamma += "1"
+                epsilon += "0"
             } else {
-                a += "0"
-                b += "1"
+                gamma += "0"
+                epsilon += "1"
             }
         }
 
-        var gamma = a.toInt(2)
-        var epsilon = b.toInt(2)
-
-        return gamma * epsilon
-
+        return gamma.toInt(2) * epsilon.toInt(2)
     }
 
     fun part2(input: String): Int {
-        var nums = input.lines().get(0).length
+        val nums = input.lines().get(0).length
 
         var lines = input.lines()
         for (i in 0 until nums) {
-            var count = 0
-            for (line in lines) {
-                if (line[i] == '1') count++;
-            }
-            val other = lines.size - count
-            lines = if (count >= other) {
-                lines.filter { l -> l[i] == '1' }
-            } else {
-                lines.filter { l -> l[i] == '0' }
-            }
+            val count = lines.filter { line -> line[i] == '1' }.size
+            val filter = if (count >= lines.size - count) '1' else '0'
+            lines = lines.filter { l -> l[i] == filter }
             if (lines.size == 1) break
         }
-        var first = lines.get(0).toInt(2)
+        val first = lines[0].toInt(2)
 
 
         lines = input.lines()
         for (i in 0 until nums) {
-            var count = 0
-            for (line in lines) {
-                if (line[i] == '0') count++;
-            }
-            val other = lines.size - count
-            lines = if (count <=  other) {
-                lines.filter { l -> l[i] == '0' }
-            } else {
-                lines.filter { l -> l[i] == '1' }
-            }
+            val count = lines.filter { line -> line[i] == '0' }.size
+            val filter = if (count <= lines.size - count) '0' else '1'
+            lines = lines.filter { l -> l[i] == filter }
             if (lines.size == 1) break
         }
-        var second = lines.get(0).toInt(2)
+        val second = lines[0].toInt(2)
         return first * second
     }
 
