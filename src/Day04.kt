@@ -2,123 +2,83 @@ import AoCUtils.test
 import java.io.File
 
 fun main() {
+    data class Check(var mark: Boolean = false, val num: Int)
+    data class Board(var rows: List<List<Check>>, var winner: Boolean = false, var order: Int = 0, var sum: Int = 0) {
+        fun mark(number: Int) =
+            rows.forEach { row ->
+                row.forEach { cell ->
+                    if (cell.num == number) cell.mark = true
+                }
+            }
 
 
+        fun checkWinning(number: Int) {
+            for (i in 0..4) {
+                if (rows[i].filter { it.mark }.size == 5) {
+                    winner = true
+                }
+                var counter = 0
+                for (j in 0..4) {
+                    if (rows[j][i].mark) counter++
+                }
+                if (counter == 5) winner = true
+            }
+            if (winner) {
+                sum = rows.sumOf { it -> it.filter { !it.mark }.sumOf { it.num } } * number
+            }
+        }
 
-    fun part1(input: String): Int {
-        data class Check(var mark: Boolean = false, val num: Int)
-        data class Board(var row: List<List<Check>>, var winner: Boolean = false)
-        val numbers = input.lines()[0].split(",").map { s -> s.toInt() }
+    }
 
-        val boards = input.lines().drop(1).windowed(6, 6)
-
-        val boards2 = boards.map { board ->
+    fun createBoards(input: String) = input.lines().drop(1).windowed(6, 6)
+        .map { board ->
             board.drop(1)
                 .map { s ->
-
-                        var split = s.split(" ")
-                        split
-                            .filter { it.trim().isNotEmpty() }
-                            .map { it ->
-                            Check(false, it.trim().toInt())
-                        }
-
+                    s.split(" ")
+                        .filter { it.isNotEmpty() }
+                        .map { Check(false, it.trim().toInt()) }
                 }
-        }
+        }.map { b -> Board(b) }
 
-        val board3 = boards2.map { b -> Board(b) }
-        var winnerSum = 0
+    fun part1(input: String): Int {
+        val numbers = input.lines()[0].split(",").map { s -> s.toInt() }
+        val boards = createBoards(input)
+
         for (number in numbers) {
-            board3.forEach {
-                it.row.forEach { row -> row.forEach { cell -> if (cell.num == number) cell.mark = true } }
+            boards.forEach { board ->
+                board.mark(number)
+                board.checkWinning(number)
             }
 
-            // check if we have a winner
-            for (board in board3) {
-
-                for (row in board.row) {
-                    if (row.filter { it.mark }.size == 5) {
-                        board.winner = true
-                    }
-                }
-                for (i in 0..4) {
-                    var counter = 0
-                    for (j in 0..4) {
-                        if (board.row[j][i].mark) counter++
-                    }
-                    if (counter == 5) board.winner = true
-                }
-            }
-
-            val winner = board3.find { it.winner }
+            val winner = boards.find { it.winner }
             if (winner != null) {
-                winnerSum = winner.row.sumOf { it.filter { !it.mark }.map { it.num }.sum() } * number
-                break
+                return winner.sum
             }
-
         }
 
-
-        return winnerSum
+        return 0
     }
 
     fun part2(input: String): Int {
-        data class Check(var mark: Boolean = false, val num: Int)
-        data class Board(var row: List<List<Check>>, var winner: Boolean = false, var order: Int = 0, var sum: Int=0)
-
         val numbers = input.lines()[0].split(",").map { s -> s.toInt() }
-
-        val boards = input.lines().drop(1).windowed(6, 6)
-
-        val boards2 = boards.map { board ->
-            board.drop(1)
-                .map { s ->
-
-                    var split = s.split(" ")
-                    split
-                        .filter { it.trim().isNotEmpty() }
-                        .map { it ->
-                            Check(false, it.trim().toInt())
-                        }
-
-                }
-        }
-
-        val board3 = boards2.map { b -> Board(b) }
-        var winnerSum = 0
+        val boards = createBoards(input)
         var winOrder = 1
 
         for (number in numbers) {
-            board3.forEach {
-                it.row.forEach { row -> row.forEach { cell -> if (cell.num == number) cell.mark = true } }
-            }
-
-            // check if we have a winner
-            for (board in board3) {
-
-                for (row in board.row) {
-                    if (row.filter { it.mark }.size == 5) {
-                        board.winner = true
+            boards.forEach { board ->
+                if (!board.winner) {
+                    board.mark(number)
+                    board.checkWinning(number)
+                    if (board.winner && board.order == 0) {
+                        board.order = winOrder
+                        winOrder++
                     }
-                }
-                for (i in 0..4) {
-                    var counter = 0
-                    for (j in 0..4) {
-                        if (board.row[j][i].mark) counter++
-                    }
-                    if (counter == 5) board.winner = true
-                }
-
-                if (board.winner && board.order == 0) {
-                    board.order = winOrder
-                    winOrder++
-                    board.sum = board.row.sumOf { it.filter { !it.mark }.map { it.num }.sum() } * number
                 }
             }
         }
 
 
-        return board3.filter { board -> board.winner }.sortedBy { board -> board.order }.reversed().first().sum
+        return boards.filter { board -> board.winner }.sortedBy { board -> board.order }.reversed().first().sum
 
     }
 
