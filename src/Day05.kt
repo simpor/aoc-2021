@@ -15,38 +15,8 @@ fun main() {
             }
     }.flatten()
 
-    fun part1(input: String): Int {
-        val lines = parseInput(input)
+    fun solution(lines: List<Line>): Int {
         val map = mutableMapOf<Point, Int>()
-
-        lines.forEach { line ->
-            // horizontal
-            if (line.start.x == line.end.x) {
-                val start = if (line.start.y < line.end.y) line.start.y else line.end.y
-                val end = if (line.start.y > line.end.y) line.start.y else line.end.y
-                for (p in start..end) {
-                    val point = Point(line.start.x, p)
-                    map[point] = map.getOrDefault(point, 0) + 1
-                }
-            }
-            // verticalt
-            if (line.start.y == line.end.y) {
-                val start = if (line.start.x < line.end.x) line.start.x else line.end.x
-                val end = if (line.start.x > line.end.x) line.start.x else line.end.x
-                for (p in start..end) {
-                    val point = Point(p, line.start.y)
-                    map[point] = map.getOrDefault(point, 0) + 1
-                }
-            }
-        }
-
-        return map.values.count { it > 1 }
-    }
-
-    fun part2(input: String): Int {
-        val lines = parseInput(input)
-        val map = mutableMapOf<Point, Int>()
-
         lines.forEach { line ->
             val xStill = line.start.x == line.end.x
             val yStill = line.start.y == line.end.y
@@ -64,8 +34,17 @@ fun main() {
             }
         }
 
-
         return map.values.count { it > 1 }
+    }
+
+    fun part1(input: String): Int {
+        val lines = parseInput(input).filter { it.start.x == it.end.x || it.end.y == it.start.y }
+        return solution(lines)
+    }
+
+    fun part2(input: String): Int {
+        val lines = parseInput(input)
+        return solution(lines)
     }
 
 
