@@ -5,18 +5,15 @@ fun main() {
 
     data class Line(val start: Point, val end: Point)
 
-    fun parseInput(input: String): List<Line> {
-        val lines = input.lines().map { line ->
-            line.trim().split(" -> ")
-                .map { it.split(",") }.windowed(2) { t ->
-                    Line(
-                        Point(t[0][0].toInt(), t[0][1].toInt()),
-                        Point(t[1][0].toInt(), t[1][1].toInt())
-                    )
-                }
-        }.flatten()
-        return lines
-    }
+    fun parseInput(input: String) = input.lines().map { line ->
+        line.trim().split(" -> ")
+            .map { it.split(",") }.windowed(2) { t ->
+                Line(
+                    Point(t[0][0].toInt(), t[0][1].toInt()),
+                    Point(t[1][0].toInt(), t[1][1].toInt())
+                )
+            }
+    }.flatten()
 
     fun part1(input: String): Int {
         val lines = parseInput(input)
@@ -51,21 +48,20 @@ fun main() {
         val map = mutableMapOf<Point, Int>()
 
         lines.forEach { line ->
-                val xStill = line.start.x == line.end.x
-                val yStill = line.start.y == line.end.y
-                val xIncrease = line.start.x < line.end.x
-                val yIncrease = line.start.y < line.end.y
+            val xStill = line.start.x == line.end.x
+            val yStill = line.start.y == line.end.y
+            val xIncrease = line.start.x < line.end.x
+            val yIncrease = line.start.y < line.end.y
 
-                var drawPoint = line.start
-
+            var drawPoint = line.start
+            map[drawPoint] = map.getOrDefault(drawPoint, 0) + 1
+            while (drawPoint != line.end) {
+                drawPoint = Point(
+                    if (xStill) drawPoint.x else if (xIncrease) drawPoint.x + 1 else drawPoint.x - 1,
+                    if (yStill) drawPoint.y else if (yIncrease) drawPoint.y + 1 else drawPoint.y - 1
+                )
                 map[drawPoint] = map.getOrDefault(drawPoint, 0) + 1
-                while (drawPoint != line.end) {
-                    drawPoint = Point(
-                        if (xStill) drawPoint.x else if (xIncrease) drawPoint.x + 1 else drawPoint.x - 1,
-                        if (yStill) drawPoint.y else if (yIncrease) drawPoint.y + 1 else drawPoint.y - 1
-                    )
-                    map[drawPoint] = map.getOrDefault(drawPoint, 0) + 1
-                }
+            }
         }
 
 
