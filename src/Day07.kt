@@ -6,7 +6,6 @@ import kotlin.math.min
 fun main() {
 
     fun part1(input: String): Long {
-        data class Crab(var pos: Long, var fuel: Long = 0)
         val crabs = input.split(",").map { it.toLong() }
         val min = crabs.minOrNull()!!
         val max = crabs.maxOrNull()!!
@@ -21,7 +20,6 @@ fun main() {
     }
 
     fun part2(input: String): Long {
-        data class Crab(var pos: Long, var fuel: Long = 0)
         val crabs = input.split(",").map { it.toLong() }
         val min = crabs.minOrNull()!!
         val max = crabs.maxOrNull()!!
