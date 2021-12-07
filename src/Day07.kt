@@ -1,58 +1,44 @@
 import AoCUtils.test
 import java.io.File
 import kotlin.math.abs
+import kotlin.math.min
 
 fun main() {
 
     fun part1(input: String): Long {
         data class Crab(var pos: Long, var fuel: Long = 0)
-
         val crabs = input.split(",").map { it.toLong() }
-
-        val average = crabs.sum() / crabs.size
-
-
         val min = crabs.minOrNull()!!
         val max = crabs.maxOrNull()!!
 
-        val test = mutableListOf<Crab>()
+        var minFuel = Long.MAX_VALUE
         for (pos in min..max) {
-            test.add(Crab(pos, crabs.map { abs(it - pos) }.sum()))
+            val fuel = crabs.map { abs(it - pos) }.sum()
+            minFuel = min(fuel, minFuel)
         }
 
-        val best = test.sortedBy { it.fuel }[0]
-
-
-        return best.fuel
+        return minFuel
     }
 
     fun part2(input: String): Long {
         data class Crab(var pos: Long, var fuel: Long = 0)
-
         val crabs = input.split(",").map { it.toLong() }
-
         val min = crabs.minOrNull()!!
         val max = crabs.maxOrNull()!!
 
-        val test = mutableListOf<Crab>()
+        var minFuel = Long.MAX_VALUE
         for (pos in min..max) {
 
             var totalFuel = 0L
             crabs.forEach { start ->
                 val endPos = abs(start - pos)
                 for (i in 0..endPos) {
-                    totalFuel = totalFuel + i
+                    totalFuel += i
                 }
             }
-            test.add(Crab(pos, totalFuel))
+            minFuel = min(totalFuel, minFuel)
         }
-
-        val best = test.sortedBy { it.fuel }[0]
-
-
-        return best.fuel
-
-
+        return minFuel
     }
 
 
