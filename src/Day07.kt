@@ -30,9 +30,7 @@ fun main() {
             var totalFuel = 0L
             crabs.forEach { start ->
                 val endPos = abs(start - pos)
-                for (i in 0..endPos) {
-                    totalFuel += i
-                }
+                totalFuel += endPos * (endPos + 1) / 2
             }
             minFuel = min(totalFuel, minFuel)
         }
