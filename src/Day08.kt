@@ -5,8 +5,8 @@ fun main() {
 
     fun part1(input: String): Int {
         val digits = input.lines().map { it.split(" | ") }.map { it[1] }
-        val list = digits.map { it.split(" ") }.map { it.map { it.length } }
-        return list.sumOf { it.count { it == 2 || it == 4 || it == 3 || it == 7 } }
+        val list = digits.map { it.split(" ") }.map { part -> part.map { it.length } }
+        return list.sumOf { num -> num.count { it == 2 || it == 4 || it == 3 || it == 7 } }
     }
 
     fun String.alphabetized() = String(toCharArray().apply { sort() })
