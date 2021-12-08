@@ -10,23 +10,23 @@ fun main() {
     }
 
     fun numberMatcher(encoded: List<String>): Map<String, Int> {
-        val one = encoded.filter { it.length == 2 }.single()
-        val four = encoded.filter { it.length == 4 }.single()
-        val seven = encoded.filter { it.length == 3 }.single()
-        val eight = encoded.filter { it.length == 7 }.single()
+        val one = encoded.single { it.length == 2 }
+        val four = encoded.single { it.length == 4 }
+        val seven = encoded.single { it.length == 3 }
+        val eight = encoded.single { it.length == 7 }
 
         val digit069 = encoded.filter { it.length == 6 }
         val digit235 = encoded.filter { it.length == 5 }
 
         val diff4and1 = four.toList().filter { !one.contains(it) }
 
-        val five = digit235.filter { it.toList().containsAll(diff4and1) }.single()
-        val three = digit235.filter { it.toList().containsAll(one.toList()) }.single()
-        val two = digit235.filter { it != five && it != three }.single()
+        val five = digit235.single { it.toList().containsAll(diff4and1) }
+        val three = digit235.single { it.toList().containsAll(one.toList()) }
+        val two = digit235.single { it != five && it != three }
 
-        val six = digit069.filter { !it.toList().containsAll(one.toList()) }.single()
-        val nine = digit069.filter { it != six && it.toList().containsAll(diff4and1) }.single()
-        val zero = digit069.filter { it != nine && it != six }.single()
+        val six = digit069.single { !it.toList().containsAll(one.toList()) }
+        val nine = digit069.single { it != six && it.toList().containsAll(diff4and1) }
+        val zero = digit069.single { it != nine && it != six }
 
         return mutableMapOf(
             Pair(zero, 0),
