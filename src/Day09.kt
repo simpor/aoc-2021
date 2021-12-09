@@ -15,7 +15,6 @@ fun main() {
                     && p.value < (floor[Point(p.key.x, p.key.y - 1)] ?: 10)
                     && p.value < (floor[Point(p.key.x, p.key.y + 1)] ?: 10))
         }
-        println(lowest)
 
         return lowest.map { it.value + 1 }.sum()
     }
@@ -83,7 +82,7 @@ fun main() {
     part1(input) test Pair(502, "part 1")
 
     part2(testInput) test Pair(1134, "test 2 part 2")
-    part2(input) test Pair(0, "part 2")
+    part2(input) test Pair(1330560, "part 2")
 
 
 }
