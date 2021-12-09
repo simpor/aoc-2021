@@ -23,30 +23,19 @@ fun main() {
         val list = mutableListOf<Point>()
         list.addAll(basins)
         val level = floor[point]!!
-        val p1 = Point(point.x + 1, point.y)
-        val p2 = Point(point.x - 1, point.y)
-        val p3 = Point(point.x, point.y + 1)
-        val p4 = Point(point.x, point.y - 1)
-        val f1 = floor[p1] ?: -1
-        val f2 = floor[p2] ?: -1
-        val f3 = floor[p3] ?: -1
-        val f4 = floor[p4] ?: -1
-        if (level < f1 && f1 != 9) {
-            list.add(p1)
-            list.addAll(basin(floor, basins, p1))
-        }
-        if (level < f2 && f2 != 9) {
-            list.add(p2)
-            list.addAll(basin(floor, basins, p2))
-        }
-        if (level < f3 && f3 != 9) {
-            list.add(p3)
-            list.addAll(basin(floor, basins, p3))
-        }
-        if (level < f4 && f4 != 9) {
-            list.add(p4)
-            list.addAll(basin(floor, basins, p4))
-        }
+        listOf(
+            Point(point.x + 1, point.y),
+            Point(point.x - 1, point.y),
+            Point(point.x, point.y + 1),
+            Point(point.x, point.y - 1)
+        )
+            .map { Pair(it, floor[it] ?: -1) }
+            .forEach { p ->
+                if (level < p.second && p.second != 9) {
+                    list.add(p.first)
+                    list.addAll(basin(floor, basins, p.first))
+                }
+            }
 
         return list.distinct()
 
