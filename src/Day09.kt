@@ -65,7 +65,7 @@ fun main() {
                     && p.value < (floor[Point(p.key.x, p.key.y + 1)] ?: 10))
         }
         val map = lowest.map { basin(floor, listOf(it.key), it.key).size }
-        return map.sorted().reversed().take(3).fold(1) { acc, i -> acc * i }
+        return map.sorted().takeLast(3).fold(1) { acc, i -> acc * i }
 
     }
 
