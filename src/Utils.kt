@@ -39,7 +39,7 @@ object AoCUtils {
             }
         else
             colored {
-                println("FAIL - ${this@test} does not match ${pair.first} - ${pair.second}".red.bold)
+                println("FAIL - ${this@test} != ${pair.first} - ${pair.second}".red.bold)
             }
 
 
