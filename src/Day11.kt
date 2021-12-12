@@ -5,17 +5,13 @@ fun main() {
 
     fun flash(map: Map<Point, Octopus>, pos: Point, step: Int) {
         val currentOctopus = map[pos]!!
-        if (currentOctopus.flashed != step)
-            currentOctopus.level++
-
-        if (currentOctopus.level <= 9) {
-            return
-        }
-
+        if (currentOctopus.flashed != step) currentOctopus.level++
+        if (currentOctopus.level <= 9) return
 
         currentOctopus.flashed = step
         currentOctopus.level = 0
         currentOctopus.flashes++
+
         listOf(
             Point(pos.x + 1, pos.y - 1),
             Point(pos.x + 1, pos.y + 1),
