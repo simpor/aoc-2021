@@ -6,7 +6,7 @@ fun main() {
     data class Node(val name: String, val type: Day12Type)
     data class Link(val from: Node, val to: Node)
 
-    fun generatePaths(nodes: Map<String, Node>, links: List<Link>): List<List<Node>> {
+    fun generatePaths2(nodes: Map<String, Node>, links: List<Link>, smallTwice: Boolean = false): List<List<Node>> {
         val start = nodes.values.first { it.type == Day12Type.START }
 
         fun innerGenerator(path: List<Node>, links: List<Link>, completePaths: List<List<Node>>): List<List<Node>> {
@@ -20,8 +20,22 @@ fun main() {
             val returnList = mutableListOf<List<Node>>()
             for (possibleLink in possibleLinks) {
                 if (possibleLink.to == start) continue
-                if (possibleLink.to.type == Day12Type.SMALL_CAVE && path.any { it == possibleLink.to }) continue
+                if (possibleLink.to.type == Day12Type.SMALL_CAVE) {
+                    if (!smallTwice) {
+                        if (path.any { it == possibleLink.to }) continue
+                    } else {
+                        val times = path.filter { it == possibleLink.to }.size
+                        if (times == 1) {
+                            val smallCaveMap = path.filter { it.type == Day12Type.SMALL_CAVE }.groupBy { it.name }
+                            if (smallCaveMap.values.any { it.size == 2 }) {
+                                continue
+                            }
+                        } else if (times == 2) {
+                            continue
+                        }
+                    }
 
+                }
                 val newPath = path.toMutableList()
                 newPath.add(possibleLink.to)
                 returnList.addAll(innerGenerator(newPath, links, completePaths))
@@ -48,56 +62,11 @@ fun main() {
         }.associateBy { it.name }
         val links = input.lines().map { it.split("-") }.map { split -> Link(nodes[split[0]]!!, nodes[split[1]]!!) }
             .map { listOf(it, Link(it.to, it.from)) }.flatten()
-        val paths: List<List<Node>> = generatePaths(nodes, links)
+        val paths: List<List<Node>> = generatePaths2(nodes, links)
 
         return paths.size
     }
 
-
-    fun generatePaths2(nodes: Map<String, Node>, links: List<Link>): List<List<Node>> {
-        val start = nodes.values.first { it.type == Day12Type.START }
-
-        fun innerGenerator(path: List<Node>, links: List<Link>, completePaths: List<List<Node>>): List<List<Node>> {
-            val current = path.last();
-            if (current.type == Day12Type.END) {
-                val list = completePaths.toMutableList()
-                list.add(path)
-                return list
-            }
-            val possibleLinks = links.filter { it.from == current }
-            val returnList = mutableListOf<List<Node>>()
-            for (possibleLink in possibleLinks) {
-                if (possibleLink.to == start) continue
-                if (possibleLink.to.type == Day12Type.SMALL_CAVE) {
-                    val times = path.filter { it == possibleLink.to }.size
-                    if (times == 0) {
-                        val newPath = path.toMutableList()
-                        newPath.add(possibleLink.to)
-                        returnList.addAll(innerGenerator(newPath, links, completePaths))
-                    } else if (times == 1) {
-                        val map = path.filter { it.type == Day12Type.SMALL_CAVE }.groupBy { it.name }
-                        if (map.values.any { it.size == 2 }) {
-                            continue
-                        }
-                        val newPath = path.toMutableList()
-                        newPath.add(possibleLink.to)
-                        returnList.addAll(innerGenerator(newPath, links, completePaths))
-                    } else {
-                        continue
-                    }
-                } else {
-                    val newPath = path.toMutableList()
-                    newPath.add(possibleLink.to)
-                    returnList.addAll(innerGenerator(newPath, links, completePaths))
-                }
-
-            }
-            return returnList
-        }
-
-        return innerGenerator(listOf(start), links, listOf())
-
-    }
 
     fun part2(input: String): Int {
         operator fun Regex.contains(text: CharSequence): Boolean = this.matches(text)
@@ -113,7 +82,7 @@ fun main() {
         }.associateBy { it.name }
         val links = input.lines().map { it.split("-") }.map { split -> Link(nodes[split[0]]!!, nodes[split[1]]!!) }
             .map { listOf(it, Link(it.to, it.from)) }.flatten()
-        val paths: List<List<Node>> = generatePaths2(nodes, links)
+        val paths: List<List<Node>> = generatePaths2(nodes, links, true)
 
         return paths.size
     }
@@ -189,7 +158,11 @@ fun main() {
     part2(testInput1) test Pair(36, "test 2 part 2")
     part2(testInput2) test Pair(103, "test 2 part 2")
     part2(testInput3) test Pair(3509, "test 2 part 2")
+
+    val startTime = System.currentTimeMillis()
     part2(input) test Pair(117509, "part 2")
+    val endTime = System.currentTimeMillis()
+    println(endTime - startTime)
 
 
 }
