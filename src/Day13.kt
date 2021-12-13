@@ -45,7 +45,7 @@ fun main() {
         var foldedMap = map
         var maxY = foldedMap.maxOf { it.y }
         var maxX = foldedMap.maxOf { it.x }
-        println("Dots: " + foldedMap.size)
+        println("Before Dots: " + foldedMap.size)
         debugMap(foldedMap, maxX, maxY)
         for (toFold in fold) {
             if (toFold.x == -1) {
@@ -65,7 +65,7 @@ fun main() {
 
             println("Dots: " + foldedMap.size)
             debugMap(foldedMap, maxX, maxY)
-//            break
+            break
         }
 //        foldedMap.sortedBy { it.x }.forEach { println(it) }
 
