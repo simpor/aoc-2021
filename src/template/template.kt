@@ -5,12 +5,12 @@ import java.io.File
 
 fun main() {
 
-    fun part1(input: String): Int {
+    fun part1(input: String, debug: Boolean = false): Int {
 
         return 0
     }
 
-    fun part2(input: String): Int {
+    fun part2(input: String, debug: Boolean = false): Int {
 
 
         return 0

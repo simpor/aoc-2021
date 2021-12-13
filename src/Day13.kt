@@ -3,33 +3,33 @@ import java.io.File
 
 fun main() {
 
-    fun debugMap(foldedMap: List<Point>) {
-        val maxY = foldedMap.maxOf { it.y }
-        val maxX = foldedMap.maxOf { it.x }
 
-        val map = foldedMap.associateWith { "#" }
+    fun part1(input: String, debug: Boolean = false): Int {
+        fun debugMap(foldedMap: List<Point>, maxX: Int, maxY: Int) {
+            if (debug) {
+                val map = foldedMap.associateWith { "#" }
 
-        println("map")
-        for (y in 0..maxY) {
-            println()
-            for (x in 0..maxX) {
-                val mark = map[Point(x, y)]
-                if (mark != null)
-                    print(mark)
-                else print(".")
+                println("map: " + foldedMap.size)
+                for (y in 0..maxY) {
+                    println()
+                    for (x in 0..maxX) {
+                        val mark = map[Point(x, y)]
+                        if (mark != null)
+                            print(mark)
+                        else print(".")
+                    }
+                }
+                println()
             }
         }
-        println()
-    }
 
-    fun part1(input: String): Int {
         val map = input.lines().filter { !it.startsWith("fold") }
             .filter { it.isNotEmpty() }
             .map { it.split(",") }
             .map { Point(it[0].toInt(), it[1].toInt()) }
 
         val fold =
-            input.lines().filter { it.startsWith("fold") }
+            input.lines().asSequence().filter { it.startsWith("fold") }
                 .filter { it.isNotEmpty() }
                 .map { it.replace("fold along ", "") }.map { it.split("=") }
                 .map { split ->
@@ -40,33 +40,34 @@ fun main() {
                             throw RuntimeException("nope")
                         }
                     }
-                }
+                }.toList()
 
         var foldedMap = map
-        debugMap(foldedMap)
-
+        var maxY = foldedMap.maxOf { it.y }
+        var maxX = foldedMap.maxOf { it.x }
+        println("Dots: " + foldedMap.size)
+        debugMap(foldedMap, maxX, maxY)
         for (toFold in fold) {
             if (toFold.x == -1) {
-                val maxY = foldedMap.maxOf { it.y }
                 val newMap = foldedMap.filter { it.y < toFold.y }.toMutableList()
                 val toAdd = foldedMap.filter { it.y > toFold.y }.map { Point(it.x, maxY - it.y) }
                 newMap.addAll(toAdd)
-                newMap.distinct()
-                foldedMap = newMap
+                foldedMap = newMap.distinct()
+                maxY = (maxY / 2) - 1
             }
             if (toFold.y == -1) {
-                val maxX = foldedMap.maxOf { it.x }
                 val newMap = foldedMap.filter { it.x < toFold.x }.toMutableList()
                 val toAdd = foldedMap.filter { it.x > toFold.x }.map { Point(maxX - it.x, it.y) }
                 newMap.addAll(toAdd)
-                newMap.distinct()
-                foldedMap = newMap
+                foldedMap = newMap.distinct()
+                maxX = (maxX / 2) - 1
             }
 
-            debugMap(foldedMap)
+            println("Dots: " + foldedMap.size)
+            debugMap(foldedMap, maxX, maxY)
+//            break
         }
-
-
+//        foldedMap.sortedBy { it.x }.forEach { println(it) }
 
         return foldedMap.size
     }
@@ -103,8 +104,8 @@ fun main() {
 
     val input = File("src", "Day13.txt").readText()
 
-    part1(testInput) test Pair(17, "test 1 part 1")
-//    part1(input) test Pair(0, "part 1")
+    part1(testInput, true) test Pair(17, "test 1 part 1")
+    part1(input) test Pair(0, "part 1") // not 897
 
     part2(testInput) test Pair(0, "test 2 part 2")
     part2(input) test Pair(0, "part 2")
