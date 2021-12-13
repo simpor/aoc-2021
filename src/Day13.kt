@@ -2,26 +2,27 @@ import AoCUtils.test
 import java.io.File
 
 fun main() {
+    fun debugMap(debug: Boolean,  foldedMap: List<Point>, maxX: Int, maxY: Int,letter: Boolean=false) {
+        if (debug) {
+            val map = foldedMap.associateWith { "#" }
 
+            println("map: " + foldedMap.size)
+            for (y in 0..maxY) {
+                println()
+                for (x in 0..maxX) {
+                    if (letter && x % 5 == 0) print("      ")
+                    val mark = map[Point(x, y)]
+                    if (mark != null)
+                        print(mark)
+                    else print(".")
+                }
+            }
+            println()
+        }
+    }
 
     fun part1(input: String, debug: Boolean = false): Int {
-        fun debugMap(foldedMap: List<Point>, maxX: Int, maxY: Int) {
-            if (debug) {
-                val map = foldedMap.associateWith { "#" }
 
-                println("map: " + foldedMap.size)
-                for (y in 0..maxY) {
-                    println()
-                    for (x in 0..maxX) {
-                        val mark = map[Point(x, y)]
-                        if (mark != null)
-                            print(mark)
-                        else print(".")
-                    }
-                }
-                println()
-            }
-        }
 
         val map = input.lines().filter { !it.startsWith("fold") }
             .filter { it.isNotEmpty() }
@@ -30,7 +31,6 @@ fun main() {
 
         val fold =
             input.lines().asSequence().filter { it.startsWith("fold") }
-                .filter { it.isNotEmpty() }
                 .map { it.replace("fold along ", "") }.map { it.split("=") }
                 .map { split ->
                     when {
@@ -46,28 +46,29 @@ fun main() {
         var maxY = foldedMap.maxOf { it.y }
         var maxX = foldedMap.maxOf { it.x }
         println("Before Dots: " + foldedMap.size)
-        debugMap(foldedMap, maxX, maxY)
+        debugMap(debug, foldedMap, maxX, maxY)
         for (toFold in fold) {
             if (toFold.x == -1) {
                 val newMap = foldedMap.filter { it.y < toFold.y }.toMutableList()
-                val toAdd = foldedMap.filter { it.y > toFold.y }.map { Point(it.x, maxY - it.y) }
+                val toAdd = foldedMap.filter { it.y > toFold.y }.map { it.copy(y = maxY - it.y) }
                 newMap.addAll(toAdd)
                 foldedMap = newMap.distinct()
                 maxY = (maxY / 2) - 1
             }
             if (toFold.y == -1) {
                 val newMap = foldedMap.filter { it.x < toFold.x }.toMutableList()
-                val toAdd = foldedMap.filter { it.x > toFold.x }.map { Point(maxX - it.x, it.y) }
+                val toAdd = foldedMap.filter { it.x > toFold.x }.map { it.copy(x = maxX - it.x) }
                 newMap.addAll(toAdd)
                 foldedMap = newMap.distinct()
                 maxX = (maxX / 2) - 1
             }
 
             println("Dots: " + foldedMap.size)
-            debugMap(foldedMap, maxX, maxY)
-            break
+            debugMap(debug, foldedMap, maxX, maxY)
+            // break
         }
 //        foldedMap.sortedBy { it.x }.forEach { println(it) }
+        debugMap(true, foldedMap, maxX, maxY, true)
 
         return foldedMap.size
     }
