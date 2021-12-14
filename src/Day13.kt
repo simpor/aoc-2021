@@ -2,10 +2,11 @@ import AoCUtils.test
 import java.io.File
 
 fun main() {
-    fun debugMap(debug: Boolean,  foldedMap: List<Point>, maxX: Int, maxY: Int,letter: Boolean=false) {
+    fun debugMap(debug: Boolean,  foldedMap: List<Point>, letter: Boolean=false) {
         if (debug) {
             val map = foldedMap.associateWith { "#" }
-
+            var maxY = foldedMap.maxOf { it.y }
+            var maxX = foldedMap.maxOf { it.x }
             println("map: " + foldedMap.size)
             for (y in 0..maxY) {
                 println()
@@ -43,32 +44,29 @@ fun main() {
                 }.toList()
 
         var foldedMap = map
-        var maxY = foldedMap.maxOf { it.y }
-        var maxX = foldedMap.maxOf { it.x }
+
         println("Before Dots: " + foldedMap.size)
-        debugMap(debug, foldedMap, maxX, maxY)
+        debugMap(debug, foldedMap)
         for (toFold in fold) {
             if (toFold.x == -1) {
                 val newMap = foldedMap.filter { it.y < toFold.y }.toMutableList()
-                val toAdd = foldedMap.filter { it.y > toFold.y }.map { it.copy(y = maxY - it.y) }
+                val toAdd = foldedMap.filter { it.y > toFold.y }.map { it.copy(y = toFold.y * 2 - it.y) }
                 newMap.addAll(toAdd)
                 foldedMap = newMap.distinct()
-                maxY = (maxY / 2) - 1
             }
             if (toFold.y == -1) {
                 val newMap = foldedMap.filter { it.x < toFold.x }.toMutableList()
-                val toAdd = foldedMap.filter { it.x > toFold.x }.map { it.copy(x = maxX - it.x) }
+                val toAdd = foldedMap.filter { it.x > toFold.x }.map { it.copy(x = toFold.x*2 - it.x) }
                 newMap.addAll(toAdd)
                 foldedMap = newMap.distinct()
-                maxX = (maxX / 2) - 1
             }
 
             println("Dots: " + foldedMap.size)
-            debugMap(debug, foldedMap, maxX, maxY)
+            debugMap(debug, foldedMap)
             // break
         }
 //        foldedMap.sortedBy { it.x }.forEach { println(it) }
-        debugMap(true, foldedMap, maxX, maxY, true)
+        debugMap(true, foldedMap, true)
 
         return foldedMap.size
     }
@@ -106,7 +104,7 @@ fun main() {
     val input = File("src", "Day13.txt").readText()
 
     part1(testInput, true) test Pair(17, "test 1 part 1")
-    part1(input) test Pair(0, "part 1") // not 897
+    part1(input) test Pair(770, "part 1") // not 897
 
     part2(testInput) test Pair(0, "test 2 part 2")
     part2(input) test Pair(0, "part 2")
