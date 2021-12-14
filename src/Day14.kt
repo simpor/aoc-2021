@@ -3,8 +3,6 @@ import java.io.File
 
 fun main() {
 
-    fun Map<Any, Long>.increase(key: Any, value: Long) =  (this[key] ?: 0) + value
-
     fun part1(input: String, debug: Boolean = false): Int {
         var polymer = input.lines().take(1).first()
         val template = input.lines().drop(2).map { it.split(" -> ") }.associate { it[0] to it[1] }
@@ -34,26 +32,27 @@ fun main() {
 
         val countMap = template.keys.associateWith { 0L }.toMutableMap()
 
-        polymer.windowed(2) { win -> countMap[win.toString()] = (countMap[win.toString()] ?: 0) + 1 }
+        polymer.windowed(2) { win -> countMap.increaseOrAdd(win.toString(), 1) }
 
-        val letterCounter = polymer.toList().groupBy { it }.map { it.key to it.value.size.toLong() }.toMap().toMutableMap()
+        val letterCounter = polymer.toList()
+            .groupBy { it }
+            .map { it.key to it.value.size.toLong() }.toMap().toMutableMap()
+
         for (step in 1..40) {
-
-            val filter = countMap.filter { it.value > 0 }
-
-            filter.forEach { pair ->
-                val l = template[pair.key]
-                if (l != null) {
+            countMap
+                .filter { it.value > 0 }
+                .filter { template[it.key] != null }
+                .forEach { pair ->
+                    val l = template[pair.key]!!
                     val old = pair.key
                     val new1 = old[0] + l.toString()
                     val new2 = l.toString() + old[1]
-                    countMap[old] = countMap[old]!! - pair.value
-                    countMap[new1] = countMap[new1]!! + pair.value
-                    countMap[new2] = countMap[new2]!! + pair.value
+                    countMap.increaseOrAdd(old, -pair.value)
+                    countMap.increaseOrAdd(new1, pair.value)
+                    countMap.increaseOrAdd(new2, pair.value)
 
-                    letterCounter[l] = (letterCounter[l] ?: 0)  + pair.value
+                    letterCounter.increaseOrAdd(l, pair.value)
                 }
-            }
         }
         val maxOf = letterCounter.map { it.value }.maxOrNull()!!
         val minOf = letterCounter.map { it.value }.minOrNull()!!
@@ -90,3 +89,4 @@ fun main() {
 
 
 }
+

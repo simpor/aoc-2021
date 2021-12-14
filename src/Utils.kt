@@ -25,6 +25,14 @@ operator fun Point3.plus(other: Point3): Point3 {
     )
 }
 
+fun <K> MutableMap<K, Long>.increaseOrAdd(key: K, value: Long) {
+    if (this[key] != null) {
+        this[key] = this[key]!! + value
+    }
+    else this[key] = value
+}
+
+
 object AoCUtils {
 
     fun readText(source: String): String =
