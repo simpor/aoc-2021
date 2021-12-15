@@ -47,49 +47,51 @@ fun main() {
         val mapSize = map.keys.maxByOrNull { it.x + it.y }!!
 
         val completeMap = mutableMapOf<Point, Long>()
+        for (y in 0..9) {
+            println()
+            for (x in 0..9) {
+                print(map[Point(x, y)])
+            }
+        }
+        println()
 
         // increase input
-
         // y....
-        for (xRollout in 0 until 5) {
-            for (yRollout in 0 until 5) {
-
-                for (x in 0..mapSize.x) {
-                    for (y in 0..mapSize.y) {
-                        if (xRollout == 0 && yRollout == 0) {
-                            completeMap[Point(x, y)] = map[Point(x, y)]!!
-                        } else if (xRollout == 0) {
-                            // get prev
-                            val prev = Point(x, y + (yRollout - 1) * mapSize.y)
-                            val current = Point(x, y + yRollout * mapSize.y)
-                            val cost = if (completeMap[prev]!! == 9L) 1L else completeMap[prev]!! + 1
-                            completeMap[current] = cost
-                        } else if (yRollout == 0) {
-                            // get prev
-                            val prev = Point(x + (xRollout - 1) * mapSize.x, y)
-                            val current = Point(x + xRollout * mapSize.x, y)
-                            try {
-                                val cost = if (completeMap[prev]!! == 9L) 1L else completeMap[prev]!! + 1
-                                completeMap[current] = cost
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
-                        } else {
-                            val prev = Point(x + (xRollout - 1) * mapSize.x, y + (yRollout - 1) * mapSize.y)
-                            val current = Point(x + xRollout * mapSize.x, y + yRollout * mapSize.y)
-                            try {
-                                val cost = if (completeMap[prev]!! == 9L) 1L else completeMap[prev]!! + 1
-                                completeMap[current] = cost
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
-                        }
-
-                    }
+        for (x in 0..mapSize.x) {
+            for (y in 0..((mapSize.y + 1) * 5)) {
+                if (y <= mapSize.y) {
+                    completeMap[Point(x, y)] = map[Point(x, y)]!!
+                } else {
+                    val prevY = y - mapSize.y - 1
+                    val prev = Point(x, prevY)
+                    val current = Point(x, y)
+                    val cost = if (completeMap[prev]!! == 9L) 1L else completeMap[prev]!! + 1
+                    completeMap[current] = cost
                 }
 
             }
         }
+
+        for (y in 0..49) {
+            println()
+            for (x in 0..9) {
+                print(completeMap[Point(x, y)])
+            }
+        }
+        println()
+
+        // x...
+        for (y in 0..((mapSize.y + 1) * 5)) {
+            for (x in (mapSize.x + 1)..((mapSize.x + 1) * 5)) {
+                val prevX = x - mapSize.x - 1
+                val prev = Point(prevX, y)
+                val current = Point(x, y)
+                val cost = if (completeMap[prev]!! == 9L) 1L else completeMap[prev]!! + 1
+                completeMap[current] = cost
+            }
+        }
+
+
         for (y in 0..49) {
             println()
             for (x in 0..49) {
@@ -97,7 +99,6 @@ fun main() {
             }
         }
         println()
-
 
         val start = Point(0, 0)
         val goal = completeMap.keys.maxByOrNull { it.x + it.y }!!
