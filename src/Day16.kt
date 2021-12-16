@@ -5,14 +5,15 @@ enum class ParseState { INIT }
 
 fun main() {
 
-    fun getNumber(input: String): Int {
-        return input.windowed(5, 5, false).map { it.substring(1) }.joinToString(separator = "").toInt(radix = 2)
+    fun getNumber(input: String): Long {
+        return input.windowed(5, 5, false).map { it.substring(1) }.joinToString(separator = "").toLong(radix = 2)
     }
 
-    fun parseString(input: String, operators: MutableList<Int>): List<String> {
+    fun parseString(input: String, operators: MutableList<Int>, result: MutableList<String>, loops: Int = -2): String {
         var binaryString = input
-        if (input.isNotEmpty()) println("parsing: " + input)
-        val innerResult = mutableListOf<String>()
+        if (input.isNotEmpty()) println("parsing: $input")
+        if (loops == 0) return input
+        val newLoop = loops - 1
         while (binaryString.isNotEmpty()) {
             if (binaryString.dropWhile { it == '0' }.isEmpty()) break
 
@@ -36,7 +37,7 @@ fun main() {
 
                 val toCheck = binaryString.take(end)
                 val element = getNumber(toCheck).toString()
-                innerResult.add(element)
+                result.add(element)
                 binaryString = binaryString.drop(end)
 
 
@@ -47,34 +48,32 @@ fun main() {
                 if (lengthType == "1") {
                     val numberOfSubPackages = binaryString.take(11).toInt(radix = 2)
                     binaryString = binaryString.drop(11)
-                    for (n in 0 until numberOfSubPackages) {
-                        val element = binaryString.take(11)
-                        innerResult.addAll(parseString(element, operators))
-                        binaryString = binaryString.drop(11)
-                    }
+                    val newBinary = parseString(binaryString, operators, result, numberOfSubPackages)
+                    binaryString = newBinary
                 } else {
                     val subPackageLength = binaryString.take(15).toInt(radix = 2)
                     binaryString = binaryString.drop(15)
 
-                    val list = parseString(binaryString.take(subPackageLength), operators)
-                    innerResult.addAll(list)
+                    val list = parseString(binaryString.take(subPackageLength), operators, result, -1)
                     binaryString = binaryString.drop(subPackageLength)
                 }
             }
 
         }
-        return innerResult;
+        return binaryString;
     }
 
     fun part1(input: String, debug: Boolean = false): Long {
-        var binaryString = input.toList().map { it.toString().toInt(radix = 16).toString(2) }
+        var binaryString = input.toList().map { it.toString().toLong(radix = 16).toString(2) }
             .map { if (it.length == 1) "000$it" else if (it.length == 2) "00$it" else if (it.length == 3) "0$it" else it }
             .joinToString(separator = "")
 
         println("BinaryString: $binaryString")
 
         val operators = mutableListOf<Int>()
-        val result = parseString(binaryString, operators)
+        val result = mutableListOf<String>()
+
+        parseString(binaryString, operators, result)
         println(result)
         println("operators $operators and sum: ${operators.sum()}")
         return operators.sum().toLong()
