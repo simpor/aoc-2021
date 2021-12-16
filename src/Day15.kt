@@ -134,7 +134,7 @@ fun main() {
     part1(input) test Pair(673L, "part 1")
 
     part2(testInput) test Pair(315L, "test 2 part 2")
-    part2(test2) test Pair(12L, "test 2 part 2")
+    part2(test2) test Pair(188L, "test 2 part 2")
     part2(input) test Pair(2893L, "part 2")  // to high: 2908
 
 
