@@ -25,14 +25,16 @@ fun main() {
                 // locate end of it
                 var end = -1
                 val windowed = binaryString.windowed(5, 5)
-                windowed.forEachIndexed { index, s -> if (s.startsWith("0")) {
-                    if (end == -1) end = index
-                    return@forEachIndexed
-                } }
+                windowed.forEachIndexed { index, s ->
+                    if (s.startsWith("0")) {
+                        if (end == -1) end = index
+                    }
+                }
                 end = (end * 5) + 5
 
                 val toCheck = binaryString.take(end)
-                innerResult.add(getNumber(toCheck).toString())
+                val element = getNumber(toCheck).toString()
+                innerResult.add(element)
                 binaryString = binaryString.drop(end)
 
 
@@ -41,7 +43,13 @@ fun main() {
                 binaryString = binaryString.drop(1)
 
                 if (lengthType == "1") {
-
+                    val numberOfSubPackages = binaryString.take(11).toInt(radix = 2)
+                    binaryString = binaryString.drop(11)
+                    for (n in 0 until numberOfSubPackages) {
+                        val element = binaryString.take(11)
+                        innerResult.addAll(parseString(element))
+                        binaryString = binaryString.drop(11)
+                    }
                 } else {
                     val subPackageLength = binaryString.take(15).toInt(radix = 2)
                     binaryString = binaryString.drop(15)
@@ -81,7 +89,8 @@ fun main() {
     val input = File("src", "Day16.txt").readText()
 
 //    part1("D2FE28") test Pair(16L, "test 1 part 1")
-    part1("38006F45291200") test Pair(16L, "test 1 part 1")
+//    part1("38006F45291200") test Pair(16L, "test 1 part 1")
+    part1("EE00D40C823060") test Pair(16L, "test 1 part 1")
     part1("8A004A801A8002F478") test Pair(16L, "test 1 part 1")
     part1("620080001611562C8802118E34") test Pair(12L, "test 1 part 1")
     part1("C0015000016115A2E0802F182340") test Pair(23L, "test 1 part 1")
