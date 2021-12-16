@@ -9,15 +9,17 @@ fun main() {
         return input.windowed(5, 5, false).map { it.substring(1) }.joinToString(separator = "").toInt(radix = 2)
     }
 
-    fun parseString(input: String): List<String> {
+    fun parseString(input: String, operators: MutableList<Int>): List<String> {
         var binaryString = input
-        println("parsing: " + input)
+        if (input.isNotEmpty()) println("parsing: " + input)
         val innerResult = mutableListOf<String>()
         while (binaryString.isNotEmpty()) {
             if (binaryString.dropWhile { it == '0' }.isEmpty()) break
 
             val packetVersion = binaryString.take(3).toInt(radix = 2)
             val packetId = binaryString.drop(3).take(3).toInt(radix = 2)
+//            operators.add(packetId)
+            operators.add(packetVersion)
             binaryString = binaryString.drop(6)
 
             if (packetId == 4) {
@@ -47,14 +49,14 @@ fun main() {
                     binaryString = binaryString.drop(11)
                     for (n in 0 until numberOfSubPackages) {
                         val element = binaryString.take(11)
-                        innerResult.addAll(parseString(element))
+                        innerResult.addAll(parseString(element, operators))
                         binaryString = binaryString.drop(11)
                     }
                 } else {
                     val subPackageLength = binaryString.take(15).toInt(radix = 2)
                     binaryString = binaryString.drop(15)
 
-                    val list = parseString(binaryString.take(subPackageLength))
+                    val list = parseString(binaryString.take(subPackageLength), operators)
                     innerResult.addAll(list)
                     binaryString = binaryString.drop(subPackageLength)
                 }
@@ -71,9 +73,11 @@ fun main() {
 
         println("BinaryString: $binaryString")
 
-        val result = parseString(binaryString)
+        val operators = mutableListOf<Int>()
+        val result = parseString(binaryString, operators)
         println(result)
-        return 0
+        println("operators $operators and sum: ${operators.sum()}")
+        return operators.sum().toLong()
     }
 
     fun part2(input: String, debug: Boolean = false): Long {
@@ -90,7 +94,7 @@ fun main() {
 
 //    part1("D2FE28") test Pair(16L, "test 1 part 1")
 //    part1("38006F45291200") test Pair(16L, "test 1 part 1")
-    part1("EE00D40C823060") test Pair(16L, "test 1 part 1")
+//    part1("EE00D40C823060") test Pair(16L, "test 1 part 1")
     part1("8A004A801A8002F478") test Pair(16L, "test 1 part 1")
     part1("620080001611562C8802118E34") test Pair(12L, "test 1 part 1")
     part1("C0015000016115A2E0802F182340") test Pair(23L, "test 1 part 1")
