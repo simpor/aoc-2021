@@ -3,12 +3,33 @@ import java.io.File
 
 fun main() {
 
-    fun pixelForImage(input: String, imageEnhancement: String): String {
-        val pos = input.replace('.', '0').replace('#', '1').toInt(radix = 2)
-        return imageEnhancement[pos].toString()
+    fun printMap(debug: Boolean, map: Map<Point, String>) {
+        if (debug) {
+            val minX = map.map { it.key.x }.minByOrNull { it }!!
+            val maxX = map.map { it.key.x }.maxByOrNull { it }!!
+            val minY = map.map { it.key.y }.minByOrNull { it }!!
+            val maxY = map.map { it.key.y }.maxByOrNull { it }!!
+
+            println("Printing map")
+            for (y in minY..maxY) {
+                println()
+                for (x in minX..maxX) {
+                    print(map[Point(x, y)])
+                }
+            }
+
+            println()
+        }
     }
 
-    fun surroundingPixels(pos: Point, map: Map<Point, String>): Map<Point, String> {
+    fun pixelForImage(input: String, imageEnhancement: String): String {
+        val pos = input.replace('.', '0').replace('#', '1').toInt(radix = 2)
+        val pixel = imageEnhancement[pos].toString()
+//        println("$pos to $pixel")
+        return pixel
+    }
+
+    fun surroundingPixels(pos: Point, map: Map<Point, String>, defaultPixel: String): Map<Point, String> {
         val surrounding = listOf(
             Point(pos.x - 1, pos.y - 1),
             Point(pos.x - 1, pos.y + 1),
@@ -21,7 +42,7 @@ fun main() {
             Point(pos.x + 1, pos.y)
         )
 
-        return surrounding.map { it to map.getOrDefault(it, ".").toString() }.toMap()
+        return surrounding.map { it to map.getOrDefault(it, defaultPixel) }.toMap()
     }
 
     fun mapToString(pixels: Map<Point, String>): String {
@@ -39,17 +60,34 @@ fun main() {
         return returnString
     }
 
-    fun createNewImage(inputImageMap: MutableMap<Point, String>, imageEnhancement: String): MutableMap<Point, String> {
+    fun createNewImage(
+        inputImageMap: MutableMap<Point, String>,
+        imageEnhancement: String,
+        defaultPixel: String
+    ): MutableMap<Point, String> {
         val newMap1 = mutableMapOf<Point, String>()
-        val minX = inputImageMap.map { it.key.x }.minByOrNull { it }!!
-        val maxX = inputImageMap.map { it.key.x }.maxByOrNull { it }!!
-        val minY = inputImageMap.map { it.key.y }.minByOrNull { it }!!
-        val maxY = inputImageMap.map { it.key.y }.maxByOrNull { it }!!
+        val newSize = if (defaultPixel == ".") 1 else 2
+        val minX = inputImageMap.map { it.key.x }.minByOrNull { it }!! - newSize
+        val maxX = inputImageMap.map { it.key.x }.maxByOrNull { it }!! + newSize
+        val minY = inputImageMap.map { it.key.y }.minByOrNull { it }!! - newSize
+        val maxY = inputImageMap.map { it.key.y }.maxByOrNull { it }!! + newSize
 
-        for (y in (minY - 1)..(maxY+1)) {
-            for (x in (minX - 1)..(maxX+1)) {
+ //       println("Creating new image [$minX, $minY] to [$maxX, $maxY]")
+
+        val newInputImage = inputImageMap.toMap().toMutableMap()
+        for (y in minY..maxY) {
+            for (x in minX..maxX) {
                 val current = Point(x, y)
-                val surrounding = surroundingPixels(current, inputImageMap)
+                if (!inputImageMap.containsKey(current)) {
+                    newInputImage[current] = defaultPixel
+                }
+            }
+        }
+
+        for (y in minY..maxY) {
+            for (x in minX..maxX) {
+                val current = Point(x, y)
+                val surrounding = surroundingPixels(current, newInputImage, defaultPixel)
                 val s = mapToString(surrounding)
                 val pixel = pixelForImage(s, imageEnhancement)
                 newMap1[current] = pixel
@@ -58,47 +96,49 @@ fun main() {
         return newMap1
     }
 
-    fun printMap(map: Map<Point, String>) {
-        val minX = map.map { it.key.x }.minByOrNull { it }!!
-        val maxX = map.map { it.key.x }.maxByOrNull { it }!!
-        val minY = map.map { it.key.y }.minByOrNull { it }!!
-        val maxY = map.map { it.key.y }.maxByOrNull { it }!!
-
-        println("Printing map")
-        for (y in minY..maxY) {
-            println()
-            for (x in minX..maxX) {
-                print(map[Point(x, y)])
-            }
-        }
-
-        println()
-    }
-
     fun part1(input: String, debug: Boolean = false): Long {
         val imageEnhancement = input.lines().first();
         val inputImage = input.lines().drop(2)
 
+        val emptyPixel = pixelForImage(".........", imageEnhancement)
+        val fullPixel = pixelForImage("#########", imageEnhancement)
         val inputImageMap =
-            inputImage.mapIndexed { y, row -> row.mapIndexed { x, pixel -> Point(x, y) to pixel.toString() } }.flatten().toMap()
+            inputImage.mapIndexed { y, row -> row.mapIndexed { x, pixel -> Point(x, y) to pixel.toString() } }.flatten()
+                .toMap()
                 .toMutableMap()
 
 
-        printMap(inputImageMap)
-        val newMap = createNewImage(inputImageMap, imageEnhancement)
-        printMap(newMap)
-        val newMap2 = createNewImage(newMap, imageEnhancement)
-        printMap(newMap2)
+        printMap(debug, inputImageMap)
+        val newMap = createNewImage(inputImageMap, imageEnhancement, ".")
+        printMap(debug, newMap)
+        val newMap2 = createNewImage(newMap, imageEnhancement, emptyPixel)
+        printMap(debug, newMap2)
 
 
         return newMap2.map { it.value }.filter { it == "#" }.count().toLong()
     }
 
     fun part2(input: String, debug: Boolean = false): Long {
+        val imageEnhancement = input.lines().first();
+        val inputImage = input.lines().drop(2)
+
+        val emptyPixel = pixelForImage(".........", imageEnhancement)
+        val fullPixel = pixelForImage("#########", imageEnhancement)
+        val inputImageMap =
+            inputImage.mapIndexed { y, row -> row.mapIndexed { x, pixel -> Point(x, y) to pixel.toString() } }.flatten()
+                .toMap()
+                .toMutableMap()
+        var finalImage = inputImageMap.toMutableMap()
+        for (i in 0 until 25) {
+            printMap(debug, finalImage)
+            val newMap = createNewImage(finalImage, imageEnhancement, ".")
+            printMap(debug, newMap)
+            finalImage = createNewImage(newMap, imageEnhancement, emptyPixel)
+            printMap(debug, finalImage)
+        }
 
 
-        return 0
-
+        return finalImage.map { it.value }.filter { it == "#" }.count().toLong()
     }
 
 
@@ -118,11 +158,11 @@ fun main() {
 
     val input = File("src", "Day20.txt").readText()
 
-    part1(testInput) test Pair(35, "test 1 part 1")
-    part1(input) test Pair(0L, "part 1, not 4924")
+    part1(testInput, true) test Pair(35, "test 1 part 1")
+    part1(input) test Pair(4917, "part 1, not 4924, 4837, (4885 to low)")
 
-    part2(testInput) test Pair(0L, "test 2 part 2")
-    part2(input) test Pair(0L, "part 2")
+    part2(testInput) test Pair(3351, "test 2 part 2")
+    part2(input) test Pair(16389, "part 2")
 
 
 }
