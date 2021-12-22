@@ -9,21 +9,24 @@ fun main() {
         return input.windowed(5, 5, false).map { it.substring(1) }.joinToString(separator = "").toLong(radix = 2)
     }
 
-    data class Operator(val type: Int,val version: Int, val values: MutableList<Long> = mutableListOf())
+    data class Operator(
+        val type: Int,
+        val version: Int,
+        var lengthType: Int = -1,
+        var lengthTypeValue: Int = -1,
+        val values: MutableList<Long> = mutableListOf()
+    )
 
-    fun parseString(input: String, operators: MutableList<Operator>, loops: Int = -2): String {
+    fun parseString(input: String, operators: MutableList<Operator>): String {
         var binaryString = input
-        //if (input.isNotEmpty()) println("parsing: $input")
-        if (loops == 0) return input
-        val newLoop = loops - 1
-//        println(binaryString)
-//        println(result)
+
         while (binaryString.isNotEmpty()) {
             if (binaryString.dropWhile { it == '0' }.isEmpty()) break
 
             val packetVersion = binaryString.take(3).toInt(radix = 2)
             val packetId = binaryString.drop(3).take(3).toInt(radix = 2)
-            operators.add(Operator(packetId, packetVersion))
+            val operator = Operator(packetId, packetVersion)
+            operators.add(operator)
             binaryString = binaryString.drop(6)
 
             if (packetId == 4) {
@@ -39,21 +42,23 @@ fun main() {
 
                 val toCheck = binaryString.take(end)
                 val element = getNumber(toCheck)
-                operators.last().values.add(element)
+                operator.values.add(element)
                 binaryString = binaryString.drop(end)
             } else {
                 val lengthType = binaryString.take(1)
+                operator.lengthType = lengthType.toInt()
                 binaryString = binaryString.drop(1)
                 if (lengthType == "1") {
                     val numberOfSubPackages = binaryString.take(11).toInt(radix = 2)
+                    operator.lengthTypeValue = numberOfSubPackages
                     binaryString = binaryString.drop(11)
-                    val newBinary = parseString(binaryString, operators, numberOfSubPackages)
+                    val newBinary = parseString(binaryString, operators)
                     binaryString = newBinary
                 } else {
                     val subPackageLength = binaryString.take(15).toInt(radix = 2)
                     binaryString = binaryString.drop(15)
-
-                    parseString(binaryString.take(subPackageLength), operators, -1)
+                    operator.lengthTypeValue = subPackageLength
+                    parseString(binaryString.take(subPackageLength), operators)
                     binaryString = binaryString.drop(subPackageLength)
                 }
             }
@@ -85,7 +90,9 @@ fun main() {
         var operators = mutableListOf<Operator>()
         parseString(binaryString, operators)
 
-        println("operators $operators")
+        println("operators")
+        operators.forEach { println(it) }
+
         var lastOperator = operators.last()
         while (operators.size > 0) {
             lastOperator = operators.last()
@@ -104,7 +111,7 @@ fun main() {
                 })
             }
             if (operators.size > 1) {
-                operators =  operators.dropLast(1).toMutableList()
+                operators = operators.dropLast(1).toMutableList()
                 operators.last().values.addAll(newNum)
             } else {
                 operators = operators.dropLast(1).toMutableList()
@@ -122,9 +129,9 @@ fun main() {
 
     val input = File("src", "Day16.txt").readText()
 
-//    part1("D2FE28") test Pair(16L, "test 1 part 1")
-//    part1("38006F45291200") test Pair(16L, "test 1 part 1")
-//    part1("EE00D40C823060") test Pair(16L, "test 1 part 1")
+    part1("D2FE28") test Pair(6L, "test 1 part 1")
+    part1("38006F45291200") test Pair(9, "test 1 part 1")
+    part1("EE00D40C823060") test Pair(14, "test 1 part 1")
     part1("8A004A801A8002F478") test Pair(16L, "test 1 part 1")
     part1("620080001611562C8802118E34") test Pair(12L, "test 1 part 1")
     part1("C0015000016115A2E0802F182340") test Pair(23L, "test 1 part 1")
