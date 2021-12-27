@@ -1,4 +1,7 @@
+package year2021
+
 import AoCUtils.test
+import Point
 
 fun main() {
     data class Octopus(var level: Int, var flashed: Int, var flashes: Int = 0)

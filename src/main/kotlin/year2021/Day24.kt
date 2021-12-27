@@ -1,5 +1,7 @@
+package year2021
+
+import AoCUtils
 import AoCUtils.test
-import java.io.File
 
 enum class InstructionType { inp, add, mul, div, mod, eql }
 
@@ -112,7 +114,7 @@ fun main() {
             "div w 2\n" +
             "mod w 2"
 
-    val input = File("src", "Day24.txt").readText()
+    val input = AoCUtils.readText("year2021/Day24.txt")
 
 
 

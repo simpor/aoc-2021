@@ -1,5 +1,8 @@
+package year2021
+
+import AoCUtils
 import AoCUtils.test
-import java.io.File
+import increaseOrAdd
 
 fun main() {
 
@@ -79,7 +82,7 @@ fun main() {
             "CC -> N\n" +
             "CN -> C"
 
-    val input = File("src", "Day14.txt").readText()
+    val input = AoCUtils.readText("year2021/Day14.txt")
 
     part1(testInput) test Pair(1588, "test 1 part 1")
     part1(input) test Pair(2345, "part 1")

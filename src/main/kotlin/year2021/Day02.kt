@@ -1,5 +1,7 @@
+package year2021
+
+import AoCUtils
 import AoCUtils.test
-import java.io.File
 
 fun main() {
     data class Order(val order: String, val x: Int)
@@ -49,7 +51,7 @@ fun main() {
             "down 8\n" +
             "forward 2"
 
-    val input = File("src", "Day02.txt").readText()
+    val input = AoCUtils.readText("year2021/Day02.txt")
 
     part1(testInput) test Pair(150, "test 1 part 1")
     part1(input) test Pair(1714950, "part 1")

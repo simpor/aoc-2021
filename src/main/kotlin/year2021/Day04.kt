@@ -1,5 +1,7 @@
+package year2021
+
+import AoCUtils
 import AoCUtils.test
-import java.io.File
 
 fun main() {
     data class Check(var mark: Boolean = false, val num: Int)
@@ -103,7 +105,7 @@ fun main() {
             "22 11 13  6  5\n" +
             " 2  0 12  3  7"
 
-    val input = File("src", "Day04.txt").readText()
+    val input = AoCUtils.readText("year2021/Day04.txt")
 
     part1(testInput) test Pair(4512, "test 1 part 1")
     part1(input) test Pair(45031, "part 1")

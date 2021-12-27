@@ -1,5 +1,8 @@
+package year2021
+
+import AoCUtils
 import AoCUtils.test
-import java.io.File
+import Point
 import java.util.*
 
 fun main() {
@@ -52,7 +55,8 @@ fun main() {
         data class Node(val x: Int, val y: Int, val cost: Long = 0) {
             var sum: Long? = null
 
-            fun neighbours(completeMap: MutableMap<Point, Node>) = Point(x, y).neighbours().mapNotNull { completeMap[it] }
+            fun neighbours(completeMap: MutableMap<Point, Node>) =
+                Point(x, y).neighbours().mapNotNull { completeMap[it] }
         }
 
         val map = input.lines()
@@ -128,7 +132,7 @@ fun main() {
             "111191\n" +
             "999991"
 
-    val input = File("src", "Day15.txt").readText()
+    val input = AoCUtils.readText("year2021/Day15.txt")
 
     part1(testInput) test Pair(40L, "test 1 part 1")
     part1(input) test Pair(673L, "part 1")

@@ -1,5 +1,7 @@
+package year2021
+
+import AoCUtils
 import AoCUtils.test
-import java.io.File
 
 enum class ParseState { INIT }
 
@@ -127,24 +129,24 @@ fun main() {
 
     val testInput = ""
 
-    val input = File("src", "Day16.txt").readText()
+    val input = AoCUtils.readText("year2021/Day16.txt")
 
-    part1("D2FE28") test Pair(6L, "test 1 part 1")
-    part1("38006F45291200") test Pair(9, "test 1 part 1")
-    part1("EE00D40C823060") test Pair(14, "test 1 part 1")
-    part1("8A004A801A8002F478") test Pair(16L, "test 1 part 1")
-    part1("620080001611562C8802118E34") test Pair(12L, "test 1 part 1")
-    part1("C0015000016115A2E0802F182340") test Pair(23L, "test 1 part 1")
-    part1("A0016C880162017C3686B18A3D4780") test Pair(31L, "test 1 part 1")
-    part1(input) test Pair(957L, "part 1")
-
-    part2("C200B40A82") test Pair(3L, "test 2 part 2")
-    part2("04005AC33890") test Pair(54L, "test 2 part 2")
-    part2("880086C3E88112") test Pair(7L, "test 2 part 2")
-    part2("CE00C43D881120") test Pair(9L, "test 2 part 2")
-    part2("D8005AC2A8F0") test Pair(1, "test 2 part 2")
-    part2("F600BC2D8F") test Pair(0, "test 2 part 2")
-    part2("9C005AC2F8F0") test Pair(0, "test 2 part 2")
+//    part1("D2FE28") test Pair(6L, "test 1 part 1")
+//    part1("38006F45291200") test Pair(9, "test 1 part 1")
+//    part1("EE00D40C823060") test Pair(14, "test 1 part 1")
+//    part1("8A004A801A8002F478") test Pair(16L, "test 1 part 1")
+//    part1("620080001611562C8802118E34") test Pair(12L, "test 1 part 1")
+//    part1("C0015000016115A2E0802F182340") test Pair(23L, "test 1 part 1")
+//    part1("A0016C880162017C3686B18A3D4780") test Pair(31L, "test 1 part 1")
+//    part1(input) test Pair(957L, "part 1")
+//
+//    part2("C200B40A82") test Pair(3L, "test 2 part 2")
+//    part2("04005AC33890") test Pair(54L, "test 2 part 2")
+//    part2("880086C3E88112") test Pair(7L, "test 2 part 2")
+//    part2("CE00C43D881120") test Pair(9L, "test 2 part 2")
+//    part2("D8005AC2A8F0") test Pair(1, "test 2 part 2")
+//    part2("F600BC2D8F") test Pair(0, "test 2 part 2")
+//    part2("9C005AC2F8F0") test Pair(0, "test 2 part 2")
     part2("9C0141080250320F1802104A08") test Pair(1L, "test 2 part 2")
     part2(input) test Pair(0L, "part 2")
 

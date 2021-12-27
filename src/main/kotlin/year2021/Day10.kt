@@ -1,5 +1,7 @@
+package year2021
+
+import AoCUtils
 import AoCUtils.test
-import java.io.File
 
 enum class LineStatus { COMPLETE, CORRUPT, INCOMPLETE }
 
@@ -71,7 +73,7 @@ fun main() {
             "<{([([[(<>()){}]>(<<{{\n" +
             "<{([{{}}[<[[[<>{}]]]>[]]\n"
 
-    val input = File("src", "Day10.txt").readText()
+    val input = AoCUtils.readText("year2021/Day10.txt")
 
     part1("{([(<{}[<>[]}>{[]{[(<()>") test Pair(1197, "test 1 part 1")
     part1("[[<[([]))<([[{}[[()]]]") test Pair(3, "test 1 part 1")

@@ -20,7 +20,7 @@ fun main() {
 
     val testInput = ""
 
-    val input = File("src", "Day05.txt").readText()
+    val input =AoCUtils.readText( "Day05.txt").readText()
 
     part1(testInput) test Pair(0L, "test 1 part 1")
     part1(input) test Pair(0L, "part 1")

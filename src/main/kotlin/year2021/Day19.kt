@@ -1,5 +1,7 @@
+package year2021
+
+import AoCUtils
 import AoCUtils.test
-import java.io.File
 
 fun main() {
 
@@ -153,7 +155,7 @@ fun main() {
             "-652,-548,-490\n" +
             "30,-46,-14"
 
-    val input = File("src", "Day19.txt").readText()
+    val input = AoCUtils.readText("year2021/Day19.txt")
 
     part1(testInput) test Pair(79, "test 1 part 1")
     part1(input) test Pair(0L, "part 1")

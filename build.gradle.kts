@@ -6,14 +6,14 @@ repositories {
     mavenCentral()
 }
 
-tasks {
-    sourceSets {
-        main {
-            java.srcDirs("src")
-        }
-    }
+dependencies {
+    testImplementation(kotlin("test"))
+}
 
-    wrapper {
-        gradleVersion = "7.3"
-    }
+tasks.test {
+    useJUnitPlatform()
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>() {
+    kotlinOptions.jvmTarget = "11"
 }

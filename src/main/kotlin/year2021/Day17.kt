@@ -1,4 +1,7 @@
+package year2021
+
 import AoCUtils.test
+import Point
 
 fun main() {
     data class Box(val x1: Int, val x2: Int, val y1: Int, val y2: Int) {
@@ -31,8 +34,8 @@ fun main() {
 
     fun part1(input: String, debug: Boolean = false): Int {
         val split = input.replace("target area: ", "").split(", ")
-        val first = split.first().replace("x=", "").split("..")
-        val second = split.last().replace("y=", "").split("..")
+        val first = split.first().replace("x=", "").split("")
+        val second = split.last().replace("y=", "").split("")
         val box = Box(first[0].toInt(), first[1].toInt(), second[1].toInt(), second[0].toInt())
 
         var x1 = 0
@@ -62,8 +65,8 @@ fun main() {
     fun part2(input: String, debug: Boolean = false): Int {
 
         val split = input.replace("target area: ", "").split(", ")
-        val first = split.first().replace("x=", "").split("..")
-        val second = split.last().replace("y=", "").split("..")
+        val first = split.first().replace("x=", "").split("")
+        val second = split.last().replace("y=", "").split("")
         val box = Box(first[0].toInt(), first[1].toInt(), second[1].toInt(), second[0].toInt())
 
         var x1 = 0
@@ -74,7 +77,7 @@ fun main() {
             step++
         }
 
-        val xSpeedRange = (step -1)..box.x2
+        val xSpeedRange = (step - 1)..box.x2
         val ySpeedRange = box.y2..100
 
         val results = mutableListOf<SimulatorResult>()

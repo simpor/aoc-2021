@@ -1,4 +1,7 @@
+package year2021
+
 import AoCUtils.test
+import Point
 
 enum class Day23(val cost: Int) { Empty(0), Wall(0), A(1), B(10), C(100), D(1000) }
 

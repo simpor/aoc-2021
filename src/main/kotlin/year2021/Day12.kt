@@ -1,3 +1,5 @@
+package year2021
+
 import AoCUtils.test
 
 enum class Day12Type { START, END, BIG_CAVE, SMALL_CAVE }

@@ -1,5 +1,8 @@
+package year2021
+
+import AoCUtils
 import AoCUtils.test
-import java.io.File
+import Point
 
 fun main() {
 
@@ -72,7 +75,7 @@ fun main() {
         val minY = inputImageMap.map { it.key.y }.minByOrNull { it }!! - newSize
         val maxY = inputImageMap.map { it.key.y }.maxByOrNull { it }!! + newSize
 
- //       println("Creating new image [$minX, $minY] to [$maxX, $maxY]")
+        //       println("Creating new image [$minX, $minY] to [$maxX, $maxY]")
 
         val newInputImage = inputImageMap.toMap().toMutableMap()
         for (y in minY..maxY) {
@@ -156,7 +159,7 @@ fun main() {
             "..#..\n" +
             "..###\n"
 
-    val input = File("src", "Day20.txt").readText()
+    val input = AoCUtils.readText("year2021/Day20.txt")
 
     part1(testInput, true) test Pair(35, "test 1 part 1")
     part1(input) test Pair(4917, "part 1, not 4924, 4837, (4885 to low)")

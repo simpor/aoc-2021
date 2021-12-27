@@ -1,8 +1,11 @@
+package year2021
+
+import AoCUtils
 import AoCUtils.test
-import java.io.File
+import Point
 
 fun main() {
-    fun debugMap(debug: Boolean,  foldedMap: List<Point>, letter: Boolean=false) {
+    fun debugMap(debug: Boolean, foldedMap: List<Point>, letter: Boolean = false) {
         if (debug) {
             val map = foldedMap.associateWith { "#" }
             var maxY = foldedMap.maxOf { it.y }
@@ -56,7 +59,7 @@ fun main() {
             }
             if (toFold.y == -1) {
                 val newMap = foldedMap.filter { it.x < toFold.x }.toMutableList()
-                val toAdd = foldedMap.filter { it.x > toFold.x }.map { it.copy(x = toFold.x*2 - it.x) }
+                val toAdd = foldedMap.filter { it.x > toFold.x }.map { it.copy(x = toFold.x * 2 - it.x) }
                 newMap.addAll(toAdd)
                 foldedMap = newMap.distinct()
             }
@@ -101,7 +104,7 @@ fun main() {
             "fold along y=7\n" +
             "fold along x=5"
 
-    val input = File("src", "Day13.txt").readText()
+    val input = AoCUtils.readText("year2021/Day13.txt")
 
     part1(testInput, true) test Pair(17, "test 1 part 1")
     part1(input) test Pair(770, "part 1") // not 897

@@ -1,5 +1,7 @@
+package year2021
+
+import AoCUtils
 import AoCUtils.test
-import java.io.File
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -40,7 +42,7 @@ fun main() {
 
     val testInput = "16,1,2,0,4,2,7,1,2,14"
 
-    val input = File("src", "Day07.txt").readText()
+    val input = AoCUtils.readText("year2021/Day07.txt")
 
     part1(testInput) test Pair(37, "test 1 part 1")
     part1(input) test Pair(343441, "part 1")

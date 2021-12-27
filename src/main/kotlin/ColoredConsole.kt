@@ -10,7 +10,7 @@ import com.github.mm.coloredconsole.ColoredConsole.Style.NotApplied
 import java.util.regex.Pattern
 
 /**
- * Credits: https://github.com/marcelmatula/colored-console/blob/master/src/main/kotlin/com/github/mm/coloredconsole/ColoredConsole.kt
+ * Credits: https://github.com/marcelmatula/colored-console/blob/master/src/year2021.main/kotlin/com/github/mm/coloredconsole/ColoredConsole.kt
  */
 
 interface ColoredConsole {

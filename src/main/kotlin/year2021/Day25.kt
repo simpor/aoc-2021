@@ -1,5 +1,13 @@
+package year2021
+
+import AoCUtils
 import AoCUtils.test
-import java.io.File
+import Map2dDirection
+import Point
+import around
+import loopDownRight
+import loopRightDown
+import parseMap
 
 enum class Day25 { Right, Down, Empty }
 
@@ -101,7 +109,7 @@ fun main() {
             "v.v..>>v.v\n" +
             "....v..v.>"
 
-    val input = File("src", "Day25.txt").readText()
+    val input = AoCUtils.readText("year2021/Day25.txt")
 
 
     part1(testInput, debug = true) test Pair(58L, "test 1 part 1")

@@ -1,3 +1,5 @@
+package year2021
+
 import AoCUtils.test
 
 fun main() {

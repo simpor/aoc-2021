@@ -1,5 +1,7 @@
+package year2021
+
+import AoCUtils
 import AoCUtils.test
-import java.io.File
 
 fun main() {
     data class Fish(var days: Int, var count: Long = 1)
@@ -45,7 +47,7 @@ fun main() {
 
     val testInput = "3,4,3,1,2"
 
-    val input = File("src", "Day06.txt").readText()
+    val input = AoCUtils.readText("year2021/Day06.txt")
 
     part1(testInput) test Pair(5934, "test 1 part 1")
     part1(input) test Pair(362666, "part 1")

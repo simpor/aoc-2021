@@ -1,5 +1,8 @@
+package year2021
+
+import AoCUtils
 import AoCUtils.test
-import java.io.File
+import Point3
 
 fun main() {
 
@@ -11,7 +14,7 @@ fun main() {
             val on = row.startsWith("on")
             val split = range.split(",")
             fun String.range() = this.substringAfter("=").let {
-                val nums = it.split("..")
+                val nums = it.split("")
                 Pair(nums[0].toInt(), nums[1].toInt())
             }
 
@@ -134,7 +137,7 @@ fun main() {
             "on x=-53470..21291,y=-120233..-33476,z=-44150..38147\n" +
             "off x=-93533..-4276,y=-16170..68771,z=-104985..-24507"
 
-    val input = File("src", "Day22.txt").readText()
+    val input = AoCUtils.readText("year2021/Day22.txt")
 
     part1(testInput1) test Pair(39L, "test 1 part 1")
     part1(testInput2) test Pair(590784L, "test 1 part 1")
