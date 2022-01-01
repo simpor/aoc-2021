@@ -14,7 +14,7 @@ class Day16Test {
     @Test
     fun `Part 2`() {
         val input = AoCUtils.readText("year2021/Day16.txt")
-        Day16().part2(input) shouldBe 0
+        Day16().part2(input) shouldBe 744953223228L
     }
 
     @Test

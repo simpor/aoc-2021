@@ -18,7 +18,6 @@ class Day16 {
         var lengthType: Int = -1,
         var lengthTypeValue: Int = -1,
         var length: Int = -1,
-        var binaryString: String = "",
     )
 
     private fun parseString(input: String): Pair<String, List<Operator>> {
@@ -52,7 +51,6 @@ class Day16 {
                 val element = getNumber(toCheck)
                 operator.values.add(element)
                 operator.length = end + 6
-                operator.binaryString = header + toCheck
                 return Pair(binaryString, operators)
             } else {
                 val lengthType = binaryString.take(1)
@@ -68,18 +66,13 @@ class Day16 {
                         returnVal.second
                     }.flatten()
 
-                    val returnVal = parseString(binaryString)
                     operator.operators = operator.operators + subOperators
                     operator.versions = operator.versions + subOperators.map { it.versions }.flatten()
-                    operator.binaryString = header + binaryString
-                    operator.length = binaryString.length - returnVal.first.length
-                    binaryString = returnVal.first
                 } else {
                     val subPackageLength = binaryString.take(15).toInt(radix = 2)
                     binaryString = binaryString.drop(15)
                     operator.lengthTypeValue = subPackageLength
                     var toParse = binaryString.take(subPackageLength)
-                    operator.binaryString = header + toParse
 
                     while (toParse.isNotEmpty()) {
                         val returnVal = parseString(toParse)
