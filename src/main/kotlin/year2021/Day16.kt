@@ -15,9 +15,6 @@ class Day16 {
         var operators: List<Operator> = listOf(),
         val values: MutableList<Long> = mutableListOf(),
         var versions: List<Int> = listOf(version),
-        var lengthType: Int = -1,
-        var lengthTypeValue: Int = -1,
-        var length: Int = -1,
     )
 
     private fun parseString(input: String): Pair<String, List<Operator>> {
@@ -50,15 +47,12 @@ class Day16 {
 
                 val element = getNumber(toCheck)
                 operator.values.add(element)
-                operator.length = end + 6
                 return Pair(binaryString, operators)
             } else {
                 val lengthType = binaryString.take(1)
-                operator.lengthType = lengthType.toInt()
                 binaryString = binaryString.drop(1)
                 if (lengthType == "1") {
                     val numberOfSubPackages = binaryString.take(11).toInt(radix = 2)
-                    operator.lengthTypeValue = numberOfSubPackages
                     binaryString = binaryString.drop(11)
                     val subOperators = (1..numberOfSubPackages).map { _ ->
                         val returnVal = parseString(binaryString)
@@ -71,7 +65,6 @@ class Day16 {
                 } else {
                     val subPackageLength = binaryString.take(15).toInt(radix = 2)
                     binaryString = binaryString.drop(15)
-                    operator.lengthTypeValue = subPackageLength
                     var toParse = binaryString.take(subPackageLength)
 
                     while (toParse.isNotEmpty()) {
@@ -106,24 +99,14 @@ class Day16 {
     fun part1(input: String, debug: Boolean = false): Long {
         val binaryString = input.toList().map { it.toString().toLong(radix = 16).toString(2) }
             .joinToString(separator = "") { if (it.length == 1) "000$it" else if (it.length == 2) "00$it" else if (it.length == 3) "0$it" else it }
-
-        println("BinaryString: $binaryString")
         val (_, operators) = parseString(binaryString)
-        println("operators $operators and sum: ${operators.size}")
         return operators.first().versions.sum().toLong()
     }
 
     fun part2(input: String, debug: Boolean = false): Long {
         val binaryString = input.toList().map { it.toString().toLong(radix = 16).toString(2) }
             .joinToString(separator = "") { if (it.length == 1) "000$it" else if (it.length == 2) "00$it" else if (it.length == 3) "0$it" else it }
-
-        println("BinaryString: $binaryString")
-
-
-        var (_, operators) = parseString(binaryString)
-
-        println("operators")
-        operators.forEach { println("type: ${it.typeId}, version: ${it.version}, values: ${it.values}") }
+        val (_, operators) = parseString(binaryString)
         return operators.first().values.first()
     }
 
