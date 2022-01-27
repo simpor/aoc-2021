@@ -39,44 +39,62 @@ fun main() {
     fun part2(input: String, debug: Boolean = false): Long {
         val players = input.lines().map { it.toLong() }.toMutableList()
 
-        data class Game(val pos: Long, var score: Long)
+        data class Game(val pos: Long, var score: Long, var moves: Long = 0, var wins: Long = 0)
+        data class GameState(val p1: Game, val p2: Game, val p1Turn: Boolean)
+        data class WinnerCount(val p1: Long, val p2: Long) {
+            operator fun plus(other: WinnerCount): WinnerCount = WinnerCount(p1 + other.p1, p2 + other.p2)
+            operator fun times(other: Long): WinnerCount = WinnerCount(p1 * other, p2 * other)
+            fun max(): Long = maxOf(p1, p2)
+        }
 
         var player1Wins = 0L
         var player2Wins = 0L
+        val cache = mutableMapOf<GameState, WinnerCount>()
+        val dieFrequency: Map<Int, Long> = mapOf(3 to 1, 4 to 3, 5 to 6, 6 to 7, 7 to 6, 8 to 3, 9 to 1)
 
-        fun playGame(p1: Game, p2: Game, turn: Boolean) {
-            if (!turn && p1.score != 0L) {
-                val currentPos = p1.pos
-                val newPos = if (p1.pos % 10L == 0L) 10 else p1.pos % 10L
-                val currentScore = p1.score
+        fun playGame(gameState: GameState): WinnerCount {
+            if (!gameState.p1Turn) {
+                val newPos = if (gameState.p1.pos % 10L == 0L) 10 else gameState.p1.pos % 10L
+                val currentScore = gameState.p1.score
                 val newScore = currentScore + newPos
-                p1.score = newScore
-            } else if (p2.score != 0L) {
-                val currentPos = p2.pos
-                val newPos = if (p2.pos % 10L == 0L) 10 else p2.pos % 10L
-                val currentScore = p2.score
-                val newScore = currentScore + newPos
-                p2.score = newScore
-            }
-
-
-            if (p1.score >= 21) {
-                player1Wins++
-                return
-            }
-            if (p2.score >= 21) {
-                player2Wins++
-                return
-            }
-            if (turn) {
-
-                playGame(p1.copy(pos = p1.pos + 1), p2, false)
-                playGame(p1.copy(pos = p1.pos + 2), p2, false)
-                playGame(p1.copy(pos = p1.pos + 3), p2, false)
+                gameState.p1.score = newScore
             } else {
-                playGame(p1, p2.copy(pos = p2.pos + 1), true)
-                playGame(p1, p2.copy(pos = p2.pos + 2), true)
-                playGame(p1, p2.copy(pos = p2.pos + 3), true)
+                val newPos = if (gameState.p2.pos % 10L == 0L) 10 else gameState.p2.pos % 10L
+                val currentScore = gameState.p2.score
+                val newScore = currentScore + newPos
+                gameState.p2.score = newScore
+            }
+            //println(gameState)
+            if (gameState.p1.score >= 21) {
+                player1Wins += gameState.p1.moves
+                return WinnerCount(1, 0)
+            }
+            if (gameState.p2.score >= 21) {
+                player2Wins += gameState.p2.moves
+                return WinnerCount(0, 1)
+            }
+
+            if (cache.containsKey(gameState)) return cache.getValue(gameState)
+            //.also { println("returning from cache: $it") }
+
+            return if (gameState.p1Turn) {
+                dieFrequency.map { (sum, freq) ->
+                    playGame(
+                        gameState.copy(
+                            p1 = gameState.p1.copy(pos = gameState.p1.pos + sum),
+                            p1Turn = !gameState.p1Turn
+                        )
+                    ) * freq
+                }.reduce { acc, winnerCount -> acc + winnerCount }.also { cache[gameState] = it }
+            } else {
+                dieFrequency.map { (sum, freq) ->
+                    playGame(
+                        gameState.copy(
+                            p2 = gameState.p1.copy(pos = gameState.p1.pos + sum),
+                            p1Turn = !gameState.p1Turn
+                        )
+                    ) * freq
+                }.reduce { acc, winnerCount -> acc + winnerCount }.also { cache[gameState] = it }
             }
         }
 
@@ -84,10 +102,11 @@ fun main() {
         val p1 = Game(players[0], 0)
         val p2 = Game(players[1], 0)
 
-        playGame(p1, p2, true)
+        val gameState = playGame(GameState(p1, p2, true))
+        println("End of game: $player1Wins, $player2Wins")
+        println("End of game: $gameState")
 
-
-        return if (player1Wins < player2Wins) player2Wins else player1Wins
+        return if (gameState.p1 < gameState.p2) gameState.p2 else gameState.p1
     }
 
 

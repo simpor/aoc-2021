@@ -3,6 +3,36 @@ package year2021
 import AoCUtils
 import AoCUtils.test
 
+class Day18 {
+    data class Model(val input: String) {
+        fun asString(): String {
+            TODO("Not yet implemented")
+        }
+    }
+
+    fun parse(input: String): Model {
+        return Model(input)
+    }
+
+    fun magnitude(model: Model): Long {
+        TODO("Not yet implemented")
+    }
+
+    fun explode(model: Model): Model {
+        TODO("Not yet implemented")
+    }
+
+    fun reduce(model: Model): Model {
+        TODO("Not yet implemented")
+    }
+
+    fun solve(model: Model): Long {
+        TODO("Not yet implemented")
+    }
+
+
+}
+
 fun main() {
 
     fun part1(input: String, debug: Boolean = false): Long {
