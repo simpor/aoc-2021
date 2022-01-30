@@ -4,13 +4,30 @@ import AoCUtils
 import AoCUtils.test
 
 class Day18 {
-    data class Model(val input: String) {
-        fun asString(): String {
-            TODO("Not yet implemented")
-        }
+
+    data class Node(val parent: Node?, val left: Node?, val right: Node?, val value: Long = -1) {
+        fun depth(level: Int = 0): Int = if (parent == null) level else depth(level + 1)
+
+//        fun depth() {
+//            var depth = 1
+//            var prev = parent
+//            while (prev != null) {
+//                prev = prev.parent
+//                depth++
+//            }
+//        }
+
+        fun asString(): String = if (value == -1L) "$value" else "[$left, $right]"
+
+    }
+
+    data class Model(val input: String, val left: Node, val right: Node) {
+        fun asString(): String = "[$left, $right]"
     }
 
     fun parse(input: String): Model {
+
+
         return Model(input)
     }
 
