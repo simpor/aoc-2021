@@ -5,7 +5,7 @@ import AoCUtils.test
 
 class Day18 {
 
-    data class Node(val parent: Node?, val left: Node?, val right: Node?, val value: Long = -1) {
+    data class Node(val parent: Node? = null, val left: Node? = null, val right: Node? = null, val value: Long = -1) {
         fun depth(level: Int = 0): Int = if (parent == null) level else depth(level + 1)
 
 //        fun depth() {
@@ -17,18 +17,41 @@ class Day18 {
 //            }
 //        }
 
-        fun asString(): String = if (value == -1L) "$value" else "[$left, $right]"
+        fun asString(): String = if (value != -1L) "$value" else "[${left!!.asString()},${right!!.asString()}]"
 
     }
 
-    data class Model(val input: String, val left: Node, val right: Node) {
-        fun asString(): String = "[$left, $right]"
+    data class Model(val input: String, val left: Node = Node(), val right: Node = Node()) {
+        fun asString(): String = "[${left.asString()},${right.asString()}]"
     }
 
     fun parse(input: String): Model {
+        val model = Model(input)
+
+        fun internalParse(start: Int, end: Int): Node {
+            if (input[start].isDigit()) return Node(value = input[start].toString().toLong())
+            var count = 0
+            var index = start + 1
+            while (index < end) {
+                when (input[index]) {
+                    ',' -> {
+                        if (count == 0) {
+                            return Node(left = internalParse(start + 1, index), right = internalParse(index + 1, end))
+                        }
+                    }
+                    '[' -> count++
+                    ']' -> count--
+                }
+                index++
+            }
+            throw RuntimeException()
+        }
 
 
-        return Model(input)
+        val start = internalParse(0, input.length)
+        println(start)
+
+        return Model(input, start.left!!, start.right!!)
     }
 
     fun magnitude(model: Model): Long {
