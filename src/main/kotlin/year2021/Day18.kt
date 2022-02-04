@@ -8,14 +8,12 @@ class Day18 {
     data class Node(val parent: Node? = null, val left: Node? = null, val right: Node? = null, val value: Long = -1) {
         fun depth(level: Int = 0): Int = if (parent == null) level else depth(level + 1)
 
-//        fun depth() {
-//            var depth = 1
-//            var prev = parent
-//            while (prev != null) {
-//                prev = prev.parent
-//                depth++
-//            }
-//        }
+        fun magnitude(): Long {
+            val leftValue = if (left!!.value != -1L) left.value else left.magnitude()
+            val rightValue = if (right!!.value != -1L) right.value else right.magnitude()
+
+            return leftValue * 3 + rightValue * 2
+        }
 
         fun asString(): String = if (value != -1L) "$value" else "[${left!!.asString()},${right!!.asString()}]"
 
@@ -54,9 +52,7 @@ class Day18 {
         return Model(input, start.left!!, start.right!!)
     }
 
-    fun magnitude(model: Model): Long {
-        TODO("Not yet implemented")
-    }
+    fun magnitude(model: Model): Long = model.left.magnitude() * 3 + model.right.magnitude() * 2
 
     fun explode(model: Model): Model {
         TODO("Not yet implemented")
