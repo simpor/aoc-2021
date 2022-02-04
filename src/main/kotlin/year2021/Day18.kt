@@ -24,8 +24,6 @@ class Day18 {
     }
 
     fun parse(input: String): Model {
-        val model = Model(input)
-
         fun internalParse(start: Int, end: Int): Node {
             if (input[start].isDigit()) return Node(value = input[start].toString().toLong())
             var count = 0
@@ -45,10 +43,7 @@ class Day18 {
             throw RuntimeException()
         }
 
-
         val start = internalParse(0, input.length)
-        println(start)
-
         return Model(input, start.left!!, start.right!!)
     }
 
